@@ -20,8 +20,8 @@ function translateError(err, result) {
     this.reject(Object.assign(new Error(), { origin: err }));
 }
 
-export const isQQInstalled = QQAPI.isQQInstalled;
-export const isQQSupportApi = QQAPI.isQQSupportApi;
+// export const isQQInstalled = QQAPI.isQQInstalled;
+// export const isQQSupportApi = QQAPI.isQQSupportApi;
 
 // Save callback and wait for future event.
 let savedCallback = undefined;
