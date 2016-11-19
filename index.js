@@ -22,6 +22,7 @@ function translateError(err, result) {
 
 // export const isQQInstalled = QQAPI.isQQInstalled;
 // export const isQQSupportApi = QQAPI.isQQSupportApi;
+// export const getQQinfo = QQAPI.getQQinfo;
 
 // Save callback and wait for future event.
 let savedCallback = undefined;
