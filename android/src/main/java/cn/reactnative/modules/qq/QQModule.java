@@ -116,8 +116,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
                     System.out.println("ret=" + ret);
                     if (ret == 0) {
-                        Toast.makeText(getCurrentActivity(), "登录成功",
-                                Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getCurrentActivity(), "登录成功",
+                        //         Toast.LENGTH_LONG).show();
 
                         String openID = jo.getString("openid");
                         String accessToken = jo.getString("access_token");
@@ -222,7 +222,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                                 .emit(TestEventName, params);
 
-                        Toast.makeText(getCurrentActivity(), "你好，" + nickName, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getCurrentActivity(), "你好，" + nickName, Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
