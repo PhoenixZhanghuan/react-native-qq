@@ -20,8 +20,8 @@ function translateError(err, result) {
     this.reject(Object.assign(new Error(), { origin: err }));
 }
 
-export const isQQInstalled = QQAPI.isQQInstalled;
-export const isQQSupportApi = QQAPI.isQQSupportApi;
+// export isQQInstalled = QQAPI.isQQInstalled;
+// export const isQQSupportApi = QQAPI.isQQSupportApi;
 
 // Save callback and wait for future event.
 let savedCallback = undefined;
@@ -71,6 +71,16 @@ export function shareToQzone(data={}) {
 export function logout(){
     QQAPI.logout()
 }
+
+export function isQQInstalled() {
+    return QQAPI.isQQInstalled();
+}
+
+export function isQQSupportApi() {
+    return QQAPI.isQQSupportApi();
+}
+
+
 
 
 
