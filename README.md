@@ -63,18 +63,16 @@ dependencies{
 ```
 
 
-在`android/app/build.gradle`里，defaultConfig栏目下添加如下代码：
+在`QQMudule.java`里，添加appId如下代码：
 
-```
-		manifestPlaceholders = [
-            QQ_APPID: "<平台申请的APPID>"
-        ]
+```java
+	this.appId = "xxxxxxxxx";
 ```
 
 以后如果需要修改APPID，只需要修改此一处。
 
 
-`android/app/src/main/java/<你的包名>/MainActivity.java`中，`public class MainActivity`之前增加：
+`android/app/src/main/java/<你的包名>/MainApplication.java`中，`public class MainApplication`之前增加：
 
 ```java
 import cn.reactnative.modules.qq.QQPackage;
@@ -115,12 +113,13 @@ import * as QQAPI from 'react-native-qq';
 返回一个`Promise`对象。成功时的回调为一个类似这样的对象：
 
 ```javascript
-{
-	"access_token": "CAF0085A2AB8FDE7903C97F4792ECBC3",
-	"openid": "0E00BA738F6BB55731A5BBC59746E88D"
-	"expires_in": "1458208143094.6"	
-	"oauth_consumer_key": "12345"
-}
+this.androidQQLoginListener = DeviceEventEmitter.addListener("userInfoEmitter", res => { 
+	openId: res.open_id,
+	accessToken: res.access_token, 
+	nickName: res.nick_name, //昵称
+	figureUrl: res.figureurl_qq_2, //头像
+	gender: res.gender //性别
+})
 ```
 
 #### QQAPI.shareToQQ(data)

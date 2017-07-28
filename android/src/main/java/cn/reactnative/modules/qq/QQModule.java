@@ -1,12 +1,9 @@
 package cn.reactnative.modules.qq;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.app.Activity;
-import android.widget.Toast;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -30,17 +27,18 @@ import org.json.JSONObject;
  *
  * Modified by Renguang Dong on 2016-05-25.
  */
-public class QQModule extends ReactContextBaseJavaModule implements IUiListener, ActivityEventListener {
+public class QQModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     private String appId;
     private Tencent api;
     private final static String INVOKE_FAILED = "QQ API invoke returns false.";
-    private static final  String TestEventName = "TestEventName";
-    private boolean isLogin;
+    private static final  String userInfoEmitter = "userInfoEmitter";
+    private static final  String shareEmitter = "shareEmitter";
+
     private Promise loginPromise;
-    private Promise shareToQQPromise;
-    private Promise shareToQzonePromise;
+
     private IUiListener loginListener;
     private IUiListener userInfoListener;
+    private IUiListener shareListener;
     private UserInfo userInfo;
 
     private static final String RCTQQShareTypeNews = "news";
@@ -65,8 +63,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     public QQModule(ReactApplicationContext context) {
         super(context);
 
-
-        this.appId = "1105711546";
+        this.appId = "1106174082";
     }
 
     @Override
@@ -116,8 +113,6 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
                     System.out.println("ret=" + ret);
                     if (ret == 0) {
-                        // Toast.makeText(getCurrentActivity(), "登录成功",
-                        //         Toast.LENGTH_LONG).show();
 
                         String openID = jo.getString("openid");
                         String accessToken = jo.getString("access_token");
@@ -126,7 +121,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                         api.setAccessToken(accessToken, expires);
 
                         params = Arguments.createMap();
-                        params.putString("openid", openID);
+                        params.putString("open_id", openID);
                         params.putString("access_token", accessToken);
 
 
@@ -214,13 +209,15 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     } else {
                         String nickName = jo.getString("nickname");
                         String figureurl_qq_2 = jo.getString("figureurl_qq_2");
+                        String gender = jo.getString("gender");
 
-                        params.putString("nickName", nickName);
+                        params.putString("nick_name", nickName);
                         params.putString("figureurl_qq_2", figureurl_qq_2);
+                        params.putString("gender", gender);
 
                         getReactApplicationContext()
                                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                                .emit(TestEventName, params);
+                                .emit(userInfoEmitter, params);
 
                         // Toast.makeText(getCurrentActivity(), "你好，" + nickName, Toast.LENGTH_LONG).show();
                     }
@@ -238,6 +235,31 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
             }
 
+        };
+
+        shareListener = new IUiListener() {
+            @Override
+            public void onComplete(Object o) {
+                WritableMap resultMap = Arguments.createMap();
+
+                resultMap.putString("type", "QQShareResponse");
+                resultMap.putInt("errCode", SHARE_RESULT_CODE_SUCCESSFUL);
+                resultMap.putString("message", "Share successfully.");
+
+                getReactApplicationContext()
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit(shareEmitter, resultMap);
+            }
+
+            @Override
+            public void onError(UiError uiError) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
         };
     }
 
@@ -260,10 +282,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @ReactMethod
     public void isQQInstalled(Promise promise) {
         if (api.isSupportSSOLogin(getCurrentActivity())) {
-            promise.resolve(true);
+            promise.resolve("1");
         }
         else {
-            promise.reject("not installed");
+            promise.reject("0");
         }
     }
     
@@ -280,12 +302,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @ReactMethod
     public void logout(Promise promise) {
         api.logout(getCurrentActivity());
+        promise.resolve(null);
     }
 
     @ReactMethod
     public void login(String scopes, Promise promise){
         this.loginPromise = promise;
-        this.isLogin = true;
         if (!api.isSessionValid()){
             api.login(getCurrentActivity(), scopes == null ? "get_simple_userinfo" : scopes, loginListener);
         } else {
@@ -296,18 +318,15 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     @ReactMethod
     public void shareToQQ(ReadableMap data, Promise promise){
-        this.shareToQQPromise = promise;
         this._shareToQQ(data, 0);
     }
 
     @ReactMethod
     public void shareToQzone(ReadableMap data, Promise promise){
-        this.shareToQzonePromise = promise;
         this._shareToQQ(data, 1);
     }
 
     private void _shareToQQ(ReadableMap data, int scene) {
-        this.isLogin = false;
         Bundle bundle = new Bundle();
         if (data.hasKey(RCTQQShareTitle)){
             bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.getString(RCTQQShareTitle));
@@ -349,67 +368,22 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (scene == 0 ) {
             // Share to QQ.
             bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE);
-            api.shareToQQ(getCurrentActivity(), bundle, this);
+            api.shareToQQ(getCurrentActivity(), bundle, shareListener);
         }
         else if (scene == 1) {
             // Share to Qzone.
             bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN);
-            api.shareToQQ(getCurrentActivity(), bundle, this);
+            api.shareToQQ(getCurrentActivity(), bundle, shareListener);
         }
     }
 
-    private String _getType() {
-        return (this.isLogin?"QQAuthorizeResponse":"QQShareResponse");
-    }
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-        Tencent.onActivityResultData(requestCode, resultCode, data, this);
+        Tencent.onActivityResultData(requestCode, resultCode, data, userInfoListener);
     }
 
     public void onNewIntent(Intent intent){
 
     }
 
-    @Override
-    public void onComplete(Object o) {
-
-        WritableMap resultMap = Arguments.createMap();
-        resultMap.putInt("code", SHARE_RESULT_CODE_SUCCESSFUL);
-        resultMap.putString("message", "Share successfully.");
-        Log.d("<<<<<<<<<<<", resultMap.toString());
-        this.resolvePromise(resultMap);
-    }
-
-    @Override
-    public void onError(UiError uiError) {
-        WritableMap resultMap = Arguments.createMap();
-        resultMap.putInt("code", SHARE_RESULT_CODE_FAILED);
-        resultMap.putString("message", "Share failed." + uiError.errorDetail);
-
-        this.resolvePromise(resultMap);
-    }
-
-    @Override
-    public void onCancel() {
-        WritableMap resultMap = Arguments.createMap();
-        resultMap.putInt("code", SHARE_RESULT_CODE_CANCEL);
-        resultMap.putString("message", "Share canceled.");
-
-        this.resolvePromise(resultMap);
-    }
-
-    private void resolvePromise(ReadableMap resultMap) {
-        if (this.loginPromise != null) {
-            this.loginPromise.resolve(resultMap);
-            this.loginPromise = null;
-        }
-        if (this.shareToQQPromise != null) {
-            this.shareToQQPromise.resolve(resultMap);
-            this.shareToQQPromise = null;
-        }
-        if (this.shareToQzonePromise != null) {
-            this.shareToQzonePromise.resolve(resultMap);
-            this.shareToQzonePromise = null;
-        }
-    }
 }
