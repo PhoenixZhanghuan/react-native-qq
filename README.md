@@ -1,6 +1,6 @@
 # react-native-qq
 
-React Native的QQ登录插件, react-native版本需要0.17.0及以上
+React Native的QQ登录插件, react-native版本需要0.33.0及以上
 
 ## 如何安装
 
@@ -63,25 +63,44 @@ dependencies{
 ```
 
 
-在`QQMudule.java`里，添加appId如下代码：
+在`android/app/build.gradle`里，defaultConfig栏目下添加如下代码：
 
-```java
-	this.appId = "xxxxxxxxx";
+```
+		manifestPlaceholders = [
+            QQ_APPID: "<平台申请的APPID>"
+        ]
 ```
 
 以后如果需要修改APPID，只需要修改此一处。
 
-
-`android/app/src/main/java/<你的包名>/MainApplication.java`中，`public class MainApplication`之前增加：
-
-```java
-import cn.reactnative.modules.qq.QQPackage;
-```
-
-`.addPackage(new MainReactPackage())`之后增加：
+`android/app/src/main/java/<你的包名>/MainApplication.java`中添加如下两行：
 
 ```java
-                .addPackage(new QQPackage())
+...
+import cn.reactnative.modules.qq.QQPackage;  // 在public class MainApplication之前import
+
+public class MainApplication extends Application implements ReactApplication {
+
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    @Override
+    protected boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new QQPackage(), // 然后添加这一行
+          new MainReactPackage()
+      );
+    }
+  };
+
+  @Override
+  public ReactNativeHost getReactNativeHost() {
+      return mReactNativeHost;
+  }
+}
 ```
 
 另外，确保你的MainActivity.java中有`onActivityResult`的实现：
@@ -113,14 +132,17 @@ import * as QQAPI from 'react-native-qq';
 返回一个`Promise`对象。成功时的回调为一个类似这样的对象：
 
 ```javascript
-this.androidQQLoginListener = DeviceEventEmitter.addListener("userInfoEmitter", res => { 
-	openId: res.open_id,
-	accessToken: res.access_token, 
-	nickName: res.nick_name, //昵称
-	figureUrl: res.figureurl_qq_2, //头像
-	gender: res.gender //性别
-})
+{
+	"access_token": "CAF0085A2AB8FDE7903C97F4792ECBC3",
+	"openid": "0E00BA738F6BB55731A5BBC59746E88D"
+	"expires_in": "1458208143094.6"	
+	"oauth_consumer_key": "12345"
+}
 ```
+
+#### QQAPI.logout()
+
+登出QQ
 
 #### QQAPI.shareToQQ(data)
 
