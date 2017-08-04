@@ -1,6 +1,6 @@
 # react-native-qq
 
-React Native的QQ登录插件, react-native版本需要0.33.0及以上
+React Native的QQ登录插件, react-native版本需要0.17.0及以上
 
 ## 如何安装
 
@@ -73,34 +73,17 @@ dependencies{
 
 以后如果需要修改APPID，只需要修改此一处。
 
-`android/app/src/main/java/<你的包名>/MainApplication.java`中添加如下两行：
+
+`android/app/src/main/java/<你的包名>/MainActivity.java`中，`public class MainActivity`之前增加：
 
 ```java
-...
-import cn.reactnative.modules.qq.QQPackage;  // 在public class MainApplication之前import
+import cn.reactnative.modules.qq.QQPackage;
+```
 
-public class MainApplication extends Application implements ReactApplication {
+`.addPackage(new MainReactPackage())`之后增加：
 
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    protected boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
-
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new QQPackage(), // 然后添加这一行
-          new MainReactPackage()
-      );
-    }
-  };
-
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-      return mReactNativeHost;
-  }
-}
+```java
+                .addPackage(new QQPackage())
 ```
 
 另外，确保你的MainActivity.java中有`onActivityResult`的实现：
@@ -139,10 +122,6 @@ import * as QQAPI from 'react-native-qq';
 	"oauth_consumer_key": "12345"
 }
 ```
-
-#### QQAPI.logout()
-
-登出QQ
 
 #### QQAPI.shareToQQ(data)
 

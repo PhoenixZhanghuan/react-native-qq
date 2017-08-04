@@ -20,7 +20,7 @@ function translateError(err, result) {
     this.reject(Object.assign(new Error(), { origin: err }));
 }
 
-// export isQQInstalled = QQAPI.isQQInstalled;
+// export const isQQInstalled = QQAPI.isQQInstalled;
 // export const isQQSupportApi = QQAPI.isQQSupportApi;
 
 // Save callback and wait for future event.
@@ -79,8 +79,6 @@ export function isQQInstalled() {
 export function isQQSupportApi() {
     return QQAPI.isQQSupportApi();
 }
-
-
 
 
 

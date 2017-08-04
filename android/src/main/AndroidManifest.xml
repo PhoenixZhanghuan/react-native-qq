@@ -7,6 +7,7 @@
     <application
         android:allowBackup="true"
         >
+        <meta-data android:name="QQ_APPID" android:value="${QQ_APPID}"/>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:noHistory="true"
@@ -15,7 +16,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="tencent1105711546" />
+                <data android:scheme="tencent${QQ_APPID}" />
             </intent-filter>
         </activity>
         <activity android:name="com.tencent.connect.common.AssistActivity"
