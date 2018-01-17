@@ -11,10 +11,31 @@
         "type": "version"
       },
       "/Users/zhanghuan/ReactNativeProjects/runner.camp-uapp"
+    ],
+    [
+      {
+        "raw": "react-native-qq@git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+        "scope": null,
+        "escapedName": "react-native-qq",
+        "name": "react-native-qq",
+        "rawSpec": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+        "spec": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:PhoenixZhanghuan/react-native-qq.git",
+          "sshUrl": "git+ssh://git@github.com/PhoenixZhanghuan/react-native-qq.git",
+          "httpsUrl": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+          "gitUrl": "git://github.com/PhoenixZhanghuan/react-native-qq.git",
+          "shortcut": "github:PhoenixZhanghuan/react-native-qq",
+          "directUrl": "https://raw.githubusercontent.com/PhoenixZhanghuan/react-native-qq/master/package.json"
+        }
+      },
+      "/Users/zhanghuan/ReactNativeProjects/rcshop-onreact"
     ]
   ],
   "_cnpm_publish_time": 1479369135093,
-  "_from": "react-native-qq@2.0.3",
+  "_from": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
   "_hasShrinkwrap": false,
   "_id": "react-native-qq@2.0.3",
   "_inCache": true,
@@ -31,22 +52,31 @@
   "_npmVersion": "3.10.3",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "react-native-qq@2.0.3",
+    "raw": "react-native-qq@git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
     "scope": null,
     "escapedName": "react-native-qq",
     "name": "react-native-qq",
-    "rawSpec": "2.0.3",
-    "spec": "2.0.3",
-    "type": "version"
+    "rawSpec": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+    "spec": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:PhoenixZhanghuan/react-native-qq.git",
+      "sshUrl": "git+ssh://git@github.com/PhoenixZhanghuan/react-native-qq.git",
+      "httpsUrl": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+      "gitUrl": "git://github.com/PhoenixZhanghuan/react-native-qq.git",
+      "shortcut": "github:PhoenixZhanghuan/react-native-qq",
+      "directUrl": "https://raw.githubusercontent.com/PhoenixZhanghuan/react-native-qq/master/package.json"
+    }
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npm.taobao.org/react-native-qq/download/react-native-qq-2.0.3.tgz",
-  "_shasum": "63f44b3f89d6f3dac7215d692d8f5e542f665453",
+  "_resolved": "git+https://github.com/PhoenixZhanghuan/react-native-qq.git#0d4a6dad232cc95b0ca6c039653aacac030eb67f",
+  "_shasum": "85e5a19535a78b77dd73cea0bf26286c9a1bc323",
   "_shrinkwrap": null,
-  "_spec": "react-native-qq@2.0.3",
-  "_where": "/Users/zhanghuan/ReactNativeProjects/runner.camp-uapp",
+  "_spec": "react-native-qq@git+https://github.com/PhoenixZhanghuan/react-native-qq.git",
+  "_where": "/Users/zhanghuan/ReactNativeProjects/rcshop-onreact",
   "author": {
     "name": "tdzl2003"
   },
